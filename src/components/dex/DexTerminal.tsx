@@ -1,6 +1,6 @@
 import { TopNav } from "@/components/dex/TopNav";
 import { MarketBar } from "@/components/dex/MarketBar";
-import { ChartPanel } from "@/components/dex/ChartPanel";
+import { DexLiveChart } from "@/components/dex/DexLiveChart";
 import { OrderBook } from "@/components/dex/OrderBook";
 import { OrderForm } from "@/components/dex/OrderForm";
 import { FooterTicker } from "@/components/dex/FooterTicker";
@@ -21,7 +21,7 @@ export function DexTerminal() {
               <MarketBar />
             </div>
             <div className="flex min-h-0 flex-1 overflow-hidden rounded-2xl shadow-[var(--shadow-panel)]">
-              <ChartPanel />
+              <DexLiveChart />
             </div>
           </div>
           <div className="min-h-0 overflow-hidden rounded-2xl shadow-[var(--shadow-panel)]">
