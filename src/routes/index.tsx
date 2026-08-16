@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+/** `useLayoutEffect` on the client, no-op during SSR (avoids the React warning). */
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import { getTickOptions, getMarketPrice } from "@/lib/tick-size";
 import { useTicker } from "@/hooks/use-ticker";
 import { MarketSelector } from "@/components/MarketSelector";
@@ -193,9 +196,12 @@ function formatNum(value: number, decimals: number): string {
 
 /** Renders the dense desktop terminal on wide viewports, the mobile card stack otherwise. */
 function Index() {
-  const [desktop, setDesktop] = useState(false);
+  // `null` until the viewport is measured: rendering the mobile stack first would
+  // flash the wrong layout on desktop refreshes. useLayoutEffect resolves the
+  // breakpoint before the browser paints, so only the correct layout is ever seen.
+  const [desktop, setDesktop] = useState<boolean | null>(null);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
     const sync = () => setDesktop(mql.matches);
     sync();
@@ -203,6 +209,7 @@ function Index() {
     return () => mql.removeEventListener("change", sync);
   }, []);
 
+  if (desktop === null) return <div className="min-h-screen bg-background" />;
   return desktop ? <DexTerminal /> : <MobileTrade />;
 }
 

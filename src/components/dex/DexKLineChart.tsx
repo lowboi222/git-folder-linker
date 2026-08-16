@@ -363,7 +363,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
               onClick={() => setIntervalValue(v)}
               className={`rounded-md px-2 py-1 font-medium transition-colors ${
                 interval === v
-                  ? "bg-accent text-gold-strong"
+                  ? "bg-[color-mix(in_oklab,var(--gold)_28%,transparent)] text-gold-strong"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -448,8 +448,8 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
                   }}
                   className={`rounded-md px-2 py-1.5 text-[12.5px] ${
                     interval === i.value
-                      ? "bg-accent font-medium text-foreground"
-                      : "text-muted-foreground hover:bg-accent/60"
+                      ? "bg-[color-mix(in_oklab,var(--gold)_28%,transparent)] font-semibold text-gold-strong"
+                      : "text-muted-foreground hover:bg-panel-2 hover:text-foreground"
                   }`}
                 >
                   {i.label}
@@ -468,7 +468,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
                   setCandleType(c.value);
                   setMenu(null);
                 }}
-                className="flex w-full items-center justify-between px-3 py-2 text-left text-[13px] hover:bg-accent"
+                className="flex w-full items-center justify-between px-3 py-2 text-left text-[13px] transition-colors hover:bg-panel-2 hover:text-foreground"
               >
                 {c.label}
                 {candleType === c.value && <Check className="h-4 w-4 text-gold-strong" />}
@@ -479,7 +479,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
 
         {menu === "indicators" && (
           <Dropdown className="left-2 top-[42px] flex w-[280px] flex-col">
-            <label className="flex items-center gap-2 border-b border-border px-3 py-2">
+            <label className="mx-2 mb-1 flex items-center gap-2 rounded-lg bg-panel-2 px-2.5 py-1.5">
               <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
               <input
                 value={query}
@@ -496,7 +496,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
                   <button
                     key={ind.name}
                     onClick={() => toggleIndicator(ind.name, ind.kind)}
-                    className="flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] hover:bg-accent"
+                    className="flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] transition-colors hover:bg-panel-2 hover:text-foreground"
                   >
                     <span>
                       {ind.name}
@@ -557,7 +557,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
                 <button
                   key={name}
                   onClick={() => startDrawing(name)}
-                  className={`flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] hover:bg-accent ${
+                  className={`flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] transition-colors hover:bg-panel-2 hover:text-foreground ${
                     tool === name ? "text-gold-strong" : ""
                   }`}
                 >
@@ -588,7 +588,7 @@ function Dropdown({ className, children }: { className?: string; children: React
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`absolute z-40 rounded-xl border border-border bg-popover py-1 shadow-lg ${className ?? ""}`}
+      className={`absolute z-40 rounded-xl border border-border bg-card py-1 text-card-foreground shadow-[var(--shadow-panel)] ring-1 ring-[color-mix(in_oklab,var(--gold)_22%,transparent)] ${className ?? ""}`}
     >
       {children}
     </div>
