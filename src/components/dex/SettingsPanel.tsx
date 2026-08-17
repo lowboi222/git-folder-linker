@@ -2,8 +2,9 @@ import { Check, ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/use-theme";
 
-type Theme = "auto" | "light" | "dark";
+type Mode = "auto" | "light" | "dark";
 
 const languages = [
   "English",
@@ -23,7 +24,12 @@ const languages = [
 ];
 
 export function SettingsPanel() {
-  const [theme, setTheme] = useState<Theme>("auto");
+  const { theme, setTheme } = useTheme();
+  const mode = (theme === "light" ? "light" : "auto") as Mode;
+
+  const pickMode = (next: Mode) => {
+    setTheme(next === "light" ? "light" : "warm");
+  };
   const [view, setView] = useState<"root" | "language">("root");
   const [language, setLanguage] = useState("English");
 
@@ -65,30 +71,30 @@ export function SettingsPanel() {
         <span className="text-[14px] font-medium">Theme</span>
         <div className="flex items-center gap-1 rounded-full bg-panel-2 p-1">
           <button
-            onClick={() => setTheme("auto")}
+            onClick={() => pickMode("auto")}
             className={cn(
               "rounded-full px-3 py-1 text-[13px] font-semibold transition-colors",
-              theme === "auto" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
+              mode === "auto" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
             )}
           >
             Auto
           </button>
           <button
-            onClick={() => setTheme("light")}
+            onClick={() => pickMode("light")}
             aria-label="Light theme"
             className={cn(
               "grid h-7 w-7 place-items-center rounded-full transition-colors",
-              theme === "light" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
+              mode === "light" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
             )}
           >
             <Sun className="h-4 w-4" />
           </button>
           <button
-            onClick={() => setTheme("dark")}
+            onClick={() => pickMode("dark")}
             aria-label="Dark theme"
             className={cn(
               "grid h-7 w-7 place-items-center rounded-full transition-colors",
-              theme === "dark" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
+              mode === "dark" ? "bg-card shadow-[var(--shadow-panel)]" : "text-muted-foreground",
             )}
           >
             <Moon className="h-4 w-4" />

@@ -332,3 +332,31 @@
   --gradient-gold: linear-gradient(90deg, oklch(0.9 0.08 88), oklch(0.83 0.115 74));
   --shadow-panel: 0 1px 2px oklch(0.4 0.04 60 / 0.06);
 }
+
+/* Light mode for the desktop terminal: neutral white/grey surfaces. */
+.theme-light .dex-root {
+  --background: oklch(0.968 0.002 260);
+  --foreground: oklch(0.21 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.01 260);
+  --primary: oklch(0.845 0.094 78);
+  --primary-foreground: oklch(0.26 0.03 60);
+  --secondary: oklch(0.955 0.003 260);
+  --secondary-foreground: oklch(0.21 0.01 260);
+  --muted: oklch(0.955 0.003 260);
+  --muted-foreground: oklch(0.52 0.014 260);
+  --accent: oklch(0.945 0.006 260);
+  --accent-foreground: oklch(0.21 0.01 260);
+  --border: oklch(0.905 0.005 260);
+  --input: oklch(0.905 0.005 260);
+  --ring: oklch(0.82 0.06 76);
+  --panel: oklch(0.976 0.002 260);
+  --panel-2: oklch(0.945 0.003 260);
+  --up: oklch(0.55 0.13 155);
+  --up-soft: oklch(0.55 0.13 155 / 0.14);
+  --down: oklch(0.575 0.198 25.5);
+  --down-soft: oklch(0.575 0.198 25.5 / 0.14);
+  --shadow-panel: 0 1px 2px oklch(0.2 0 0 / 0.07);
+}

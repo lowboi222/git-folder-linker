@@ -30,6 +30,7 @@ import {
 
 import { fetchCandles, subscribeCandles, type Interval } from "@/lib/market-data";
 import { useSource, SOURCE_LABELS, type MarketSource } from "@/hooks/use-source";
+import { useTheme } from "@/hooks/use-theme";
 
 /* ------------------------------ config ------------------------------ */
 
@@ -166,6 +167,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
   const [interval, setIntervalValue] = useState<Interval>("1d");
   const [candleType, setCandleType] = useState<CandleType>("candle_solid");
   const [source, setSource] = useSource();
+  const { theme } = useTheme();
 
   const [menu, setMenu] = useState<null | "interval" | "type" | "indicators" | "tools">(null);
   const [mainOn, setMainOn] = useState<string[]>(["MA"]);
@@ -215,7 +217,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
     const el = containerRef.current;
     if (!el || !chartRef.current) return;
     chartRef.current.setStyles(buildStyles(readTheme(el), candleType));
-  }, [candleType]);
+  }, [candleType, theme]);
 
   /* data wiring */
   useEffect(() => {
