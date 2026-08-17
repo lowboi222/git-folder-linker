@@ -1,26 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, Star } from "lucide-react";
 
-const tabs = ["Favorites", "Futures", "Spot", "Prediction"];
-const categories = [
-  "All markets", "Top", "New", "Meme", "AI", "Pre-launch",
-  "Stocks", "Commodities", "ETF", "Semiconductor", "AOS-2",
-];
+import { markets } from "@/components/MarketSelector";
 
-const rows = [
-  { sym: "ASTERUSDT", lev: "200x", price: "0.6008", chg: "-0.10%", up: false, fr: "0.0043%", vol: "$5,303,797", oi: "$219,042,412", color: "oklch(0.72 0.13 72)" },
-  { sym: "BTCUSDT", lev: "200x", price: "63,076.6", chg: "+0.31%", up: true, fr: "0.0034%", vol: "$120,231,436", oi: "$796,323,703", color: "oklch(0.75 0.15 60)" },
-  { sym: "ETHUSDT", lev: "200x", price: "1,882.39", chg: "+0.16%", up: true, fr: "0.0029%", vol: "$68,633,071", oi: "$352,924,303", color: "oklch(0.6 0.12 265)" },
-  { sym: "BNBUSDT", lev: "200x", price: "610.76", chg: "+0.58%", up: true, fr: "0.0000%", vol: "$7,292,196", oi: "$10,113,806", color: "oklch(0.8 0.13 90)" },
-  { sym: "SOLUSDT", lev: "100x", price: "75.48", chg: "+0.52%", up: true, fr: "-0.0033%", vol: "$14,884,137", oi: "$231,807,155", color: "oklch(0.65 0.1 200)" },
-  { sym: "XRPUSDT", lev: "100x", price: "1.0033", chg: "+0.52%", up: true, fr: "0.0036%", vol: "$6,712,590", oi: "$54,227,199", color: "oklch(0.5 0.02 260)" },
-];
+const tabs = ["Favorites", "Futures", "Spot", "Prediction"];
+const filters = ["All markets", "Top", "New", "Meme", "AI", "Pre-launch", "Stocks"];
 
 export function MarketSelector({ onClose }: { onClose: () => void }) {
   const listRef = useRef<HTMLDivElement>(null);
+  const [tab, setTab] = useState("Futures");
+  const [filter, setFilter] = useState("All markets");
+  const [query, setQuery] = useState("");
+
   useEffect(() => {
     listRef.current?.focus();
   }, []);
+
+  const rows = markets.filter((m) => m.symbol.toLowerCase().includes(query.toLowerCase()));
+
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -29,6 +26,8 @@ export function MarketSelector({ onClose }: { onClose: () => void }) {
           <div className="flex items-center gap-3 rounded-xl bg-panel px-4 py-3">
             <Search className="h-[18px] w-[18px] text-muted-foreground" />
             <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search"
               className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
             />
@@ -39,8 +38,9 @@ export function MarketSelector({ onClose }: { onClose: () => void }) {
           {tabs.map((t) => (
             <button
               key={t}
+              onClick={() => setTab(t)}
               className={
-                t === "Futures"
+                t === tab
                   ? "flex items-center gap-1.5 border-b-2 border-gold-strong pb-2.5 font-semibold"
                   : "flex items-center gap-1.5 pb-2.5 text-muted-foreground"
               }
@@ -52,25 +52,31 @@ export function MarketSelector({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 px-4 py-3 text-[13.5px]">
-          {categories.map((c) => (
+          {filters.map((f) => (
             <button
-              key={c}
+              key={f}
+              onClick={() => setFilter(f)}
               className={`rounded-lg px-3 py-1.5 ${
-                c === "All markets" ? "bg-panel-2 font-medium" : "text-muted-foreground"
+                f === filter ? "bg-panel-2 font-medium" : "text-muted-foreground"
               }`}
             >
-              {c}
+              {f}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-[minmax(0,2fr)_repeat(5,minmax(0,1fr))] px-5 pb-1 text-[13px] text-muted-foreground">
+        <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] px-5 pb-1.5 text-[13px] leading-tight text-muted-foreground">
           <span>Symbols</span>
-          <span className="text-right">Last price</span>
-          <span className="text-right">24h change</span>
-          <span className="text-right">Funding Rate</span>
-          <span className="text-right">Volume</span>
-          <span className="text-right">Open interest</span>
+          <span className="text-right">
+            Volume
+            <br />
+            <span className="text-muted-foreground/80">Open interest</span>
+          </span>
+          <span className="text-right">
+            Price
+            <br />
+            <span className="text-muted-foreground/80">24h change</span>
+          </span>
         </div>
 
         <div
@@ -87,24 +93,35 @@ export function MarketSelector({ onClose }: { onClose: () => void }) {
         >
           {rows.map((r) => (
             <div
-              key={r.sym}
-              className="grid grid-cols-[minmax(0,2fr)_repeat(5,minmax(0,1fr))] items-center px-5 py-2.5 tabular-nums tracking-tight text-[14.5px] hover:bg-panel"
+              key={r.symbol}
+              className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] items-center px-5 py-2.5 text-[14.5px] tabular-nums tracking-tight hover:bg-panel"
             >
               <div className="flex items-center gap-3">
-                <Star className="h-4 w-4 text-muted-foreground" />
-                <span className="h-6 w-6 shrink-0 rounded-full" style={{ background: r.color }} />
+                <Star
+                  className={`h-4 w-4 shrink-0 ${
+                    r.fav ? "fill-gold-strong text-gold-strong" : "text-muted-foreground"
+                  }`}
+                />
+                <span
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${r.iconClass}`}
+                >
+                  {r.icon}
+                </span>
                 <div className="min-w-0">
-                  <div className="font-medium">{r.sym}</div>
+                  <div className="truncate font-medium">{r.symbol}</div>
                   <div className="mt-0.5 inline-block rounded bg-panel-2 px-1.5 text-[11px] text-muted-foreground">
                     {r.lev}
                   </div>
                 </div>
               </div>
-              <span className="text-right">{r.price}</span>
-              <span className={`text-right ${r.up ? "text-up" : "text-down"}`}>{r.chg}</span>
-              <span className="text-right">{r.fr}</span>
-              <span className="text-right">{r.vol}</span>
-              <span className="text-right">{r.oi}</span>
+              <span className="text-right leading-tight">
+                <span className="block">{r.volume}</span>
+                <span className="block text-muted-foreground">{r.openInterest}</span>
+              </span>
+              <span className="text-right leading-tight">
+                <span className="block">{r.price}</span>
+                <span className={`block ${r.up ? "text-up" : "text-down"}`}>{r.change}</span>
+              </span>
             </div>
           ))}
         </div>
