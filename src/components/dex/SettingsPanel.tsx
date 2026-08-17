@@ -25,11 +25,9 @@ const languages = [
 
 export function SettingsPanel() {
   const { theme, setTheme } = useTheme();
-  const mode: Mode = theme === "light" ? "light" : "auto";
-  const setMode = (_next: Mode) => {};
+  const mode = (theme === "light" ? "light" : "auto") as Mode;
 
   const pickMode = (next: Mode) => {
-    setMode(next);
     setTheme(next === "light" ? "light" : "warm");
   };
   const [view, setView] = useState<"root" | "language">("root");
