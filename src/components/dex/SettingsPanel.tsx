@@ -25,7 +25,8 @@ const languages = [
 
 export function SettingsPanel() {
   const { theme, setTheme } = useTheme();
-  const [mode, setMode] = useState<Mode>(mode === "light" ? "light" : "auto");
+  const mode: Mode = theme === "light" ? "light" : "auto";
+  const setMode = (_next: Mode) => {};
 
   const pickMode = (next: Mode) => {
     setMode(next);
