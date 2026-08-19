@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, Settings } from "lucide-react";
+import { Bell, ChevronDown, Settings, Wallet } from "lucide-react";
 import { useState } from "react";
 
 import { NotificationsPanel } from "@/components/dex/NotificationsPanel";
@@ -8,12 +8,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 const navItems = [
   { label: "Trade", caret: true },
-  { label: "Portfolio", caret: false },
-  { label: "Referral", caret: false },
-  { label: "Aster Chain", caret: true },
-  { label: "Rewards", caret: true },
   { label: "More", caret: true },
 ];
+
 
 export function TopNav() {
   const [notifOpen, setNotifOpen] = useState(false);
@@ -40,9 +37,11 @@ export function TopNav() {
       </nav>
 
       <div className="ml-auto flex items-center gap-3">
-        <button className="rounded-full border border-gold px-5 py-1.5 text-[14px] font-medium text-gold-strong transition-colors hover:bg-panel">
+        <button className="inline-flex items-center justify-center gap-2 rounded-full border border-primary bg-primary/25 px-5 py-1.5 text-[14px] font-medium text-foreground transition-colors hover:bg-primary/35">
+          <Wallet className="h-4 w-4 shrink-0" />
           Connect Wallet
         </button>
+
 
         <Popover>
           <PopoverTrigger
