@@ -37,9 +37,11 @@ export function TopNav() {
       </nav>
 
       <div className="ml-auto flex items-center gap-3">
-        <button className="rounded-full border border-gold px-5 py-1.5 text-[14px] font-medium text-gold-strong transition-colors hover:bg-panel">
+        <button className="inline-flex items-center justify-center gap-2 rounded-full border border-primary bg-primary/25 px-5 py-1.5 text-[14px] font-medium text-foreground transition-colors hover:bg-primary/35">
+          <Wallet className="h-4 w-4 shrink-0" />
           Connect Wallet
         </button>
+
 
         <Popover>
           <PopoverTrigger
