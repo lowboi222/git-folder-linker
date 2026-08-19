@@ -166,7 +166,8 @@ export function OrderForm() {
           </div>
         </div>
 
-        <button className="mt-3 w-full rounded-2xl bg-gold [background-image:var(--gradient-gold)] py-3 text-[15px] font-semibold text-primary-foreground shadow-[var(--shadow-panel)]">
+        <button className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-[15px] font-semibold text-primary-foreground shadow-[var(--shadow-panel)]">
+          <Wallet className="h-4 w-4 shrink-0" />
           Connect Wallet
         </button>
 
