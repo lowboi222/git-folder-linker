@@ -114,6 +114,8 @@ export function OrderForm() {
           <div className="space-y-2">
             <div className="flex items-center rounded-xl border border-border bg-panel px-3 py-2.5">
               <input
+                value={priceStart}
+                onChange={(e) => setPriceStart(e.target.value)}
                 placeholder="Price Start"
                 className="min-w-0 flex-1 bg-transparent tabular-nums tracking-tight text-[14px] outline-none placeholder:text-muted-foreground"
               />
@@ -121,9 +123,12 @@ export function OrderForm() {
             </div>
             <div className="flex items-center rounded-xl border border-border bg-panel px-3 py-2.5">
               <input
+                value={priceEnd}
+                onChange={(e) => setPriceEnd(e.target.value)}
                 placeholder="Price End"
                 className="min-w-0 flex-1 bg-transparent tabular-nums tracking-tight text-[14px] outline-none placeholder:text-muted-foreground"
               />
+
               <span className="pl-2.5 text-[13px] text-muted-foreground">USDT</span>
             </div>
             <div className="flex items-center rounded-xl border border-border bg-panel px-3 py-2.5">
