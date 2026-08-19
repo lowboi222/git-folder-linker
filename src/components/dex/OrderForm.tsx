@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, PlusCircle } from "lucide-react";
+import { ChevronDown, PlusCircle, Wallet } from "lucide-react";
 
 type Mode = "market" | "limit" | "ladder";
 
