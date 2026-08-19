@@ -1,13 +1,49 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronDown, PlusCircle, Wallet } from "lucide-react";
+import { toast } from "sonner";
 
 type Mode = "market" | "limit" | "ladder";
+
+function fmt(v: number, d: number) {
+  if (!Number.isFinite(v)) return "--";
+  return v.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+
+function decimalsOf(v: string) {
+  const parts = v.split(".");
+  return parts.length > 1 ? Math.min(parts[1]!.length, 6) : 1;
+}
 
 export function OrderForm() {
   const [mode, setMode] = useState<Mode>("limit");
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [tpsl, setTpsl] = useState(false);
   const [levels, setLevels] = useState("10");
+  const [priceStart, setPriceStart] = useState("");
+  const [priceEnd, setPriceEnd] = useState("");
+  const [size, setSize] = useState("");
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const pricePrecision = Math.max(decimalsOf(priceStart), decimalsOf(priceEnd));
+
+  const ladderRows = useMemo(() => {
+    if (mode !== "ladder") return [];
+    const start = Number(priceStart);
+    const end = Number(priceEnd);
+    const n = Math.floor(Number(levels));
+    const notional = Number(size);
+    if (!(start > 0) || !(end > 0) || !(n >= 1) || n > 50 || !(notional > 0)) return [];
+    const step = n === 1 ? 0 : (end - start) / (n - 1);
+    const valuePer = notional / n;
+    return Array.from({ length: n }, (_, i) => {
+      const price = start + step * i;
+      return { price, qty: valuePer / price, value: valuePer };
+    });
+  }, [mode, priceStart, priceEnd, levels, size]);
+
+  const ladderValue = ladderRows.reduce((s, r) => s + r.value, 0);
+  const ladderQty = ladderRows.reduce((s, r) => s + r.qty, 0);
+
 
   const tab = (m: Mode, label: string) =>
     m === mode ? (
