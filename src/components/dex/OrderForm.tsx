@@ -210,6 +210,34 @@ export function OrderForm() {
           </div>
         </div>
 
+        {mode === "ladder" && (
+          <>
+            <button
+              onClick={() => setPreviewOpen(true)}
+              disabled={ladderRows.length === 0}
+              className="mt-3 w-full rounded-2xl border border-border bg-panel py-2.5 text-[14px] font-medium disabled:opacity-50"
+            >
+              Preview ladder order
+            </button>
+
+            {ladderRows.length > 0 && (
+              <div className="mt-3 rounded-2xl border border-border bg-panel px-3 py-2.5">
+                <div className="flex items-center justify-between text-[13px] text-muted-foreground">
+                  <span>{ladderRows.length} levels</span>
+                  <span className="tabular-nums">
+                    {fmt(ladderRows[0]!.price, pricePrecision)} →{" "}
+                    {fmt(ladderRows[ladderRows.length - 1]!.price, pricePrecision)}
+                  </span>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-[13px]">
+                  <span className="text-muted-foreground">Qty / level</span>
+                  <span className="tabular-nums">{fmt(ladderRows[0]!.qty, 5)}</span>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
         <button className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-[15px] font-semibold text-primary-foreground shadow-[var(--shadow-panel)]">
           <Wallet className="h-4 w-4 shrink-0" />
           Connect Wallet
@@ -218,15 +246,77 @@ export function OrderForm() {
         <div className="mt-5 rounded-2xl border border-border bg-panel px-3 py-2.5">
           <div className="flex items-center justify-between text-[14px]">
             <span className="text-muted-foreground">Order Value</span>
-            <span className="tabular-nums tracking-tight font-medium">0.00 USDT</span>
+            <span className="tabular-nums tracking-tight font-medium">
+              {mode === "ladder" ? fmt(ladderValue, 2) : "0.00"} USDT
+            </span>
           </div>
           <div className="mt-2 flex items-center justify-between text-[13px]">
             <span className="text-muted-foreground">Est. Fee</span>
-            <span className="tabular-nums tracking-tight text-muted-foreground">0.00 USDT</span>
+            <span className="tabular-nums tracking-tight text-muted-foreground">
+              {mode === "ladder" ? fmt(ladderValue * 0.0005, 2) : "0.00"} USDT
+            </span>
           </div>
         </div>
-
       </div>
+
+      {previewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <button
+            aria-label="Close ladder preview"
+            onClick={() => setPreviewOpen(false)}
+            className="absolute inset-0 bg-black/50"
+          />
+          <div className="relative w-[420px] max-w-[92vw] rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-panel)]">
+            <h2 className="text-[15px] font-semibold">
+              Ladder preview · {side === "buy" ? "Buy" : "Sell"}
+            </h2>
+            <p className="mt-1 text-[12px] text-muted-foreground">
+              {ladderRows.length} levels · {fmt(ladderQty, 5)} qty · {fmt(ladderValue, 2)} USDT
+            </p>
+            <div className="mt-3 flex justify-between px-1 pb-1 text-[11px] text-muted-foreground">
+              <span>Price</span>
+              <span>Qty</span>
+              <span>Value (USDT)</span>
+            </div>
+            <div className="max-h-72 space-y-1 overflow-y-auto">
+              {ladderRows.map((l, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between rounded-lg bg-panel px-2 py-1.5 text-[12px] tabular-nums"
+                >
+                  <span className={side === "buy" ? "text-up" : "text-down"}>
+                    {fmt(l.price, pricePrecision)}
+                  </span>
+                  <span>{fmt(l.qty, 5)}</span>
+                  <span>{fmt(l.value, 2)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => setPreviewOpen(false)}
+                className="flex-1 rounded-xl border border-border bg-panel py-2.5 text-[14px] font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setPreviewOpen(false);
+                  toast(
+                    `Ladder ${side} confirmed · ${ladderRows.length} levels · ${fmt(ladderValue, 2)} USDT`,
+                  );
+                }}
+                className={`flex-1 rounded-xl py-2.5 text-[14px] font-semibold text-white ${
+                  side === "buy" ? "bg-up" : "bg-down"
+                }`}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
+
