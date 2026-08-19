@@ -148,9 +148,12 @@ export function OrderForm() {
 
         <div className="mt-2 flex items-center rounded-xl border border-border bg-panel px-3 py-2.5">
           <input
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
             placeholder="Size"
             className="min-w-0 flex-1 bg-transparent tabular-nums tracking-tight text-[14px] outline-none placeholder:text-muted-foreground"
           />
+
           <button className="flex items-center gap-1 text-[13px] text-muted-foreground">
             USDT <ChevronDown className="h-3.5 w-3.5" />
           </button>
