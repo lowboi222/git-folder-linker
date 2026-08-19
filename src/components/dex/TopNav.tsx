@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, Settings } from "lucide-react";
+import { Bell, ChevronDown, Settings, Wallet } from "lucide-react";
 import { useState } from "react";
 
 import { NotificationsPanel } from "@/components/dex/NotificationsPanel";
@@ -8,12 +8,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 const navItems = [
   { label: "Trade", caret: true },
-  { label: "Portfolio", caret: false },
-  { label: "Referral", caret: false },
-  { label: "Aster Chain", caret: true },
-  { label: "Rewards", caret: true },
   { label: "More", caret: true },
 ];
+
 
 export function TopNav() {
   const [notifOpen, setNotifOpen] = useState(false);
