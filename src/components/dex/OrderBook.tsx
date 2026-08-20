@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { ChevronDown, ArrowDown, Rows3, AlignLeft, AlignRight } from "lucide-react";
+
+import { TradesList } from "@/components/dex/TradesList";
 
 const asks = [
   ["61,207.3", "175.05K", "284.79K", 47],
@@ -50,15 +53,37 @@ function Row({
 }
 
 export function OrderBook() {
+  const [tab, setTab] = useState<"book" | "trades">("book");
+
   return (
     <section className="flex h-full w-[280px] shrink-0 flex-col overflow-hidden bg-background">
-      <div className="grid grid-cols-2 border-b border-border">
-        <button className="border-b-2 border-gold-strong py-[11px] text-[16px] font-semibold">
+      <div className="grid shrink-0 grid-cols-2 border-b border-border">
+        <button
+          onClick={() => setTab("book")}
+          className={
+            tab === "book"
+              ? "border-b-2 border-gold-strong py-[11px] text-[16px] font-semibold"
+              : "py-[11px] text-[16px] text-muted-foreground"
+          }
+        >
           Order Book
         </button>
-        <button className="py-[11px] text-[16px] text-muted-foreground">Trades</button>
+        <button
+          onClick={() => setTab("trades")}
+          className={
+            tab === "trades"
+              ? "border-b-2 border-gold-strong py-[11px] text-[16px] font-semibold"
+              : "py-[11px] text-[16px] text-muted-foreground"
+          }
+        >
+          Trades
+        </button>
       </div>
 
+      {tab === "trades" ? (
+        <TradesList />
+      ) : (
+        <>
       <div className="flex items-center gap-2 px-3 py-1.5">
         <Rows3 className="h-[18px] w-[18px] text-gold-strong" />
         <AlignLeft className="h-[18px] w-[18px] text-muted-foreground" />
@@ -96,6 +121,8 @@ export function OrderBook() {
           <Row key={r[0]} price={r[0]} size={r[1]} total={r[2]} depth={r[3]} side="bid" />
         ))}
       </div>
+        </>
+      )}
     </section>
   );
 }
