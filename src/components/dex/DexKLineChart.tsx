@@ -31,6 +31,7 @@ import {
 import { fetchCandles, subscribeCandles, type Interval } from "@/lib/market-data";
 import { useSource, SOURCE_LABELS, type MarketSource } from "@/hooks/use-source";
 import { useTheme } from "@/hooks/use-theme";
+import { CandleCountdown } from "@/components/CandleCountdown";
 
 /* ------------------------------ config ------------------------------ */
 
@@ -573,6 +574,7 @@ export default function DexKLineChart({ symbol }: { symbol: string }) {
         {/* chart canvas */}
         <div className="relative min-w-0 flex-1">
           <div ref={containerRef} className="absolute inset-0" />
+          <CandleCountdown interval={interval} className="bottom-[26px] right-[62px]" />
           {(loading || error) && (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
               <span className="rounded-md bg-secondary px-3 py-1.5 text-xs text-muted-foreground">

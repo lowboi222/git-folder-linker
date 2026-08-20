@@ -25,6 +25,7 @@ import {
 
 import { fetchCandles, subscribeCandles, type Interval } from "@/lib/market-data";
 import { useSource, SOURCE_LABELS, type MarketSource } from "@/hooks/use-source";
+import { CandleCountdown } from "@/components/CandleCountdown";
 
 
 /* ------------------------------ config ------------------------------ */
@@ -484,6 +485,7 @@ export default function KLineChartPanel({ symbol }: { symbol: string }) {
           ref={containerRef}
           className={fullscreen ? "h-[calc(100vh-96px)] w-full" : "h-[340px] w-full"}
         />
+        <CandleCountdown interval={interval} className="bottom-[24px] right-[56px]" />
         {(loading || error) && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <span className="rounded-md bg-secondary px-3 py-1.5 text-xs text-muted-foreground">
