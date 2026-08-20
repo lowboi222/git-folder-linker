@@ -9,8 +9,10 @@ const ROUTES: { prefix: string; base: string }[] = [
   { prefix: "/fapi/v1/klines", base: "https://fapi.asterdex.com" },
   { prefix: "/fapi/v1/ticker/24hr", base: "https://fapi.asterdex.com" },
   { prefix: "/fapi/v1/premiumIndex", base: "https://fapi.asterdex.com" },
+  { prefix: "/fapi/v1/trades", base: "https://fapi.asterdex.com" },
   { prefix: "/api/v1/market/candles", base: "https://api.kucoin.com" },
   { prefix: "/api/v1/market/stats", base: "https://api.kucoin.com" },
+  { prefix: "/api/v1/market/histories", base: "https://api.kucoin.com" },
 ];
 
 export const Route = createFileRoute("/api/public/market")({
