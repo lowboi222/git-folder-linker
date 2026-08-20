@@ -15,7 +15,7 @@ function fmtPrice(v: number, d: number) {
 }
 
 function fmtSize(v: number) {
-  return v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return v.toFixed(1);
 }
 
 function fmtTime(ms: number) {
