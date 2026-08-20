@@ -293,3 +293,61 @@ export async function fetchTicker(symbol: string, source?: MarketSource): Promis
     pricePrecision:  decimalsOf(String(d["last"] ?? "0")),
   };
 }
+
+/* ------------------------------------------------------------------ */
+/* Recent trades                                                       */
+/* ------------------------------------------------------------------ */
+
+export type Trade = {
+  id: string;
+  price: number;
+  /** Size expressed in quote currency (USDT). */
+  size: number;
+  time: number;
+  side: "buy" | "sell";
+};
+
+export async function fetchTrades(
+  symbol: string,
+  opts: { limit?: number; source?: MarketSource } = {},
+): Promise<Trade[]> {
+  const src = opts.source ?? getSource();
+  const limit = opts.limit ?? 30;
+
+  if (src === "aster") {
+    const res = await proxyGet("/fapi/v1/trades", { symbol, limit: String(limit) });
+    if (!res.ok) throw new Error(`Failed to load trades (${res.status})`);
+    const json = (await res.json()) as
+      | { id: number; price: string; qty: string; quoteQty?: string; time: number; isBuyerMaker: boolean }[]
+      | { msg?: string };
+    if (!Array.isArray(json)) throw new Error(json.msg ?? "Trades unavailable on Aster");
+    return json
+      .map((t) => ({
+        id: String(t.id),
+        price: Number(t.price),
+        size: t.quoteQty ? Number(t.quoteQty) : Number(t.price) * Number(t.qty),
+        time: Number(t.time),
+        // isBuyerMaker true → the taker sold into the bid
+        side: (t.isBuyerMaker ? "sell" : "buy") as "buy" | "sell",
+      }))
+      .reverse();
+  }
+
+  const res = await proxyGet("/api/v1/market/histories", { symbol: toKucoin(symbol) });
+  if (!res.ok) throw new Error(`Failed to load trades (${res.status})`);
+  const json = (await res.json()) as {
+    code: string;
+    data: { sequence: string; price: string; size: string; side: string; time: number }[];
+  };
+  if (json.code !== "200000") throw new Error(`KuCoin error: ${json.code}`);
+  return (json.data ?? [])
+    .slice(-limit)
+    .map((t) => ({
+      id: t.sequence,
+      price: Number(t.price),
+      size: Number(t.price) * Number(t.size),
+      time: Math.floor(Number(t.time) / 1e6), // KuCoin gives nanoseconds
+      side: (t.side === "sell" ? "sell" : "buy") as "buy" | "sell",
+    }))
+    .reverse();
+}
